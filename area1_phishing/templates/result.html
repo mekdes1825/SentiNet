@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="{{ 'am' if language == 'am' else 'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% if language == "am" %}
+            የማስመሰያ ውጤት - SentiNet
+        {% else %}
+            Simulation Result - SentiNet
+        {% endif %}
+    </title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        {% if language == "am" %}
+
+            <h1>የማስመሰያ ሙከራ ተጠናቋል</h1>
+
+            <p>
+                ይህ የተደረገው የማስመሰያ የሳይበር ደህንነት
+                ስልጠና ነው። እውነተኛ የይለፍ ቃል፣ PIN ወይም OTP
+                አልተሰበሰበም።
+            </p>
+
+            <div class="risk-score">
+                <h2>የሰው አደጋ መለኪያ</h2>
+
+                <div class="score">
+                    {{ score }}/100
+                </div>
+
+                <div class="risk-level">
+                    {{ risk_level }}
+                </div>
+            </div>
+
+            <h2>የእርስዎ ድርጊቶች</h2>
+
+            <div class="campaign-list">
+
+                {% for item in event_breakdown %}
+
+                    <div class="campaign-item">
+
+                        <div class="campaign-info">
+
+                            {% if item.occurred %}
+                                <strong>✓</strong>
+                            {% else %}
+                                <strong>○</strong>
+                            {% endif %}
+
+                            {% if item.event_type == "phishing_viewed" %}
+                                የማስመሰያ መልዕክቱን ከፍተዋል
+                            {% elif item.event_type == "phishing_clicked" %}
+                                አጠራጣሪውን ሊንክ ጫኑ
+                            {% elif item.event_type == "form_submitted" %}
+                                የማስመሰያ ፎርሙን ላኩ
+                            {% endif %}
+
+                            {% if item.occurred %}
+                                <span>+{{ item.points }}</span>
+                            {% else %}
+                                <span>+0</span>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            <h2>የሚያስተምር መልዕክት</h2>
+
+            <p>
+                አጥቂዎች አስቸኳይነትን፣ የሐሰት የድርጅት ስምን
+                እና አጠራጣሪ ሊንኮችን በመጠቀም ሰዎችን ሊያታልሉ ይችላሉ።
+                ከማንኛውም ሊንክ በፊት ላኪውን እና URL ን ያረጋግጡ።
+            </p>
+
+            <h2>የደህንነት ምክሮች</h2>
+
+            <ul>
+                <li>አጠራጣሪ ሊንኮችን አይጫኑ።</li>
+                <li>PIN ወይም OTP ለማንም አይስጡ።</li>
+                <li>አስቸኳይ የሚመስሉ መልዕክቶችን በጥንቃቄ ይመርምሩ።</li>
+                <li>የመልዕክቱን ላኪ በገለልተኛ መንገድ ያረጋግጡ።</li>
+            </ul>
+
+        {% else %}
+
+            <h1>Simulation Complete</h1>
+
+            <p>
+                This was a controlled cybersecurity awareness simulation.
+                No real password, PIN, OTP, or financial information was collected.
+            </p>
+
+            <div class="risk-score">
+
+                <h2>Human Risk Score</h2>
+
+                <div class="score">
+                    {{ score }}/100
+                </div>
+
+                <div class="risk-level">
+                    {{ risk_level }}
+                </div>
+
+            </div>
+
+            <h2>Your Actions</h2>
+
+            <div class="campaign-list">
+
+                {% for item in event_breakdown %}
+
+                    <div class="campaign-item">
+
+                        <div class="campaign-info">
+
+                            {% if item.occurred %}
+                                <strong>✓</strong>
+                            {% else %}
+                                <strong>○</strong>
+                            {% endif %}
+
+                            {% if item.event_type == "phishing_viewed" %}
+                                Opened the simulated phishing message
+                            {% elif item.event_type == "phishing_clicked" %}
+                                Clicked the suspicious link
+                            {% elif item.event_type == "form_submitted" %}
+                                Submitted the simulated form
+                            {% endif %}
+
+                            {% if item.occurred %}
+                                <span>+{{ item.points }}</span>
+                            {% else %}
+                                <span>+0</span>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            <h2>Teachable Moment</h2>
+
+            <p>
+                Attackers often use urgency, fake branding, suspicious links,
+                and requests for confidential information to manipulate users.
+                Always verify the sender and destination URL before interacting
+                with a message.
+            </p>
+
+            <h2>How to Stay Safe</h2>
+
+            <ul>
+                <li>Do not click suspicious links.</li>
+                <li>Never share your PIN or OTP.</li>
+                <li>Be cautious with urgent account warnings.</li>
+                <li>Verify the sender through an independent channel.</li>
+            </ul>
+
+        {% endif %}
+
+        <div class="privacy-notice">
+
+            {% if language == "am" %}
+                <strong>የግላዊነት ማስታወሻ:</strong>
+                SentiNet በዚህ ማስመሰያ ውስጥ የሚሳተፉ ሰዎችን
+                ባህሪ ብቻ ይመዘግባል። እውነተኛ የይለፍ ቃል፣ PIN
+                ወይም OTP አይቀመጥም።
+            {% else %}
+                <strong>Privacy Notice:</strong>
+                SentiNet records behavioral events from the simulation only.
+                Real passwords, PINs, and OTPs are never stored.
+            {% endif %}
+
+        </div>
+
+        <div class="button-container">
+
+            <a href="/" class="primary-button">
+                {% if language == "am" %}
+                    ወደ መነሻ ገጽ ተመለስ
+                {% else %}
+                    Return Home
+                {% endif %}
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,619 @@
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #1f2937;
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 50px auto;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 35px;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+    margin-bottom: 25px;
+}
+
+h1 {
+    margin-top: 0;
+    color: #172033;
+    font-size: 32px;
+}
+
+h2 {
+    color: #172033;
+    margin-top: 30px;
+}
+
+p {
+    line-height: 1.7;
+}
+
+ul {
+    line-height: 1.9;
+}
+
+
+/* =========================
+   ORIGINAL SIMULATION LAYOUT
+   ========================= */
+
+.page-container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 10px 0 40px;
+}
+
+.simulation-card {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 0 25px;
+}
+
+.simulation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 25px;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+    margin-bottom: 25px;
+}
+
+.brand {
+    font-size: 25px;
+    font-weight: bold;
+    color: #172033;
+}
+
+.simulation-badge {
+    background: #eef2ff;
+    color: #2563eb;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+
+/* =========================
+   ORIGINAL MESSAGE CARD
+   ========================= */
+
+.message-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 35px;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+    margin: 0 auto;
+}
+
+.message-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.sender-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eff6ff;
+    border-radius: 50%;
+    font-size: 25px;
+}
+
+.message-header strong {
+    display: block;
+    color: #172033;
+    font-size: 17px;
+}
+
+.message-header span {
+    display: block;
+    color: #64748b;
+    font-size: 14px;
+    margin-top: 3px;
+}
+
+.message-card hr {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    margin: 20px 0;
+}
+
+.message-card h1 {
+    font-size: 32px;
+    margin-bottom: 25px;
+}
+
+.campaign-message p {
+    margin-bottom: 18px;
+}
+
+.warning-box {
+    background: #fff7ed;
+    border-left: 5px solid #f97316;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 25px 0;
+    color: #7c2d12;
+    font-weight: 500;
+}
+
+
+/* =========================
+   PHISHING BUTTON
+   ========================= */
+
+.phishing-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 15px 28px;
+    background: #dc2626;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 9px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: 0.2s ease;
+}
+
+.phishing-button:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+}
+
+
+/* =========================
+   SIMULATION FOOTER
+   ========================= */
+
+.simulation-footer {
+    text-align: center;
+    padding: 15px 20px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.simulation-footer p {
+    margin: 0;
+}
+
+
+/* =========================
+   LANDING PAGE
+   ========================= */
+
+.hero {
+    text-align: center;
+    padding: 55px 30px;
+}
+
+.hero h1 {
+    font-size: 42px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    max-width: 750px;
+    margin: 0 auto 25px;
+    color: #5b6472;
+    font-size: 17px;
+}
+
+.primary-button {
+    display: inline-block;
+    padding: 13px 24px;
+    background: #2563eb;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 9px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.primary-button:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.full-width {
+    width: 100%;
+}
+
+.secondary-button {
+    display: inline-block;
+    padding: 11px 20px;
+    background: #eef2ff;
+    color: #1e40af;
+    text-decoration: none;
+    border-radius: 9px;
+    font-weight: bold;
+}
+
+.language-switch {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.language-switch a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+
+/* =========================
+   SAFETY AND PRIVACY
+   ========================= */
+
+.safety-notice {
+    background: #fff7ed;
+    border-left: 5px solid #f97316;
+    padding: 18px;
+    border-radius: 8px;
+    margin: 25px 0;
+}
+
+.privacy-notice {
+    background: #f0fdf4;
+    border-left: 5px solid #22c55e;
+    padding: 18px;
+    border-radius: 8px;
+    margin-top: 30px;
+}
+
+
+/* =========================
+   VERIFY ACCOUNT PAGE
+   ========================= */
+
+.login-card {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 35px;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+}
+
+.login-icon {
+    width: 65px;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    background: #eef2ff;
+    border-radius: 50%;
+    font-size: 32px;
+}
+
+.login-card h1 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.login-description {
+    text-align: center;
+    color: #64748b;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #172033;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    background: #ffffff;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.form-group textarea {
+    min-height: 130px;
+    resize: vertical;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 6px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.form-note {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+    padding: 14px;
+    border-radius: 7px;
+    margin-bottom: 20px;
+}
+
+
+/* =========================
+   RESULT PAGE
+   ========================= */
+
+.result-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.result-header h1 {
+    margin-bottom: 10px;
+}
+
+.result-header p {
+    color: #64748b;
+}
+
+
+/* Score area */
+
+.risk-score {
+    text-align: center;
+    background: linear-gradient(135deg, #f8fafc, #eef2ff);
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 35px 20px;
+    margin: 30px 0;
+}
+
+.risk-score h2 {
+    margin-top: 0;
+    font-size: 20px;
+    color: #475569;
+}
+
+.score {
+    font-size: 58px;
+    font-weight: 800;
+    color: #1d4ed8;
+    margin: 10px 0;
+}
+
+.risk-level {
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: 999px;
+    background: #fee2e2;
+    color: #b91c1c;
+    font-weight: 800;
+    font-size: 15px;
+}
+
+
+/* Action breakdown */
+
+.campaign-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.campaign-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 18px;
+}
+
+.campaign-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+}
+
+.campaign-info strong {
+    font-size: 20px;
+    color: #16a34a;
+    min-width: 22px;
+}
+
+.campaign-info span {
+    margin-left: auto;
+    font-weight: 800;
+    color: #475569;
+}
+
+
+/* Educational sections */
+
+.result-section {
+    background: #f8fafc;
+    border-radius: 14px;
+    padding: 22px;
+    margin-top: 22px;
+}
+
+.result-section h2 {
+    margin-top: 0;
+}
+
+.result-section ul {
+    margin-bottom: 0;
+}
+
+
+/* Result action button */
+
+.button-container {
+    text-align: center;
+    margin-top: 35px;
+}
+
+
+/* =========================
+   ADMIN PAGE
+   ========================= */
+
+.admin-card {
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+.admin-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.admin-icon {
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+.admin-card .campaign-list {
+    margin-top: 25px;
+}
+
+.admin-card .campaign-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.campaign-button {
+    margin-left: 15px;
+}
+
+.admin-card .campaign-info {
+    flex: 1;
+}
+
+
+/* =========================
+   RESPONSIVE DESIGN
+   ========================= */
+
+@media (max-width: 700px) {
+
+    .container {
+        width: 94%;
+        margin: 25px auto;
+    }
+
+    .page-container {
+        padding: 10px 12px 30px;
+    }
+
+    .simulation-card {
+        width: 100%;
+    }
+
+    .simulation-header {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .brand {
+        font-size: 22px;
+    }
+
+    .simulation-badge {
+        font-size: 10px;
+        padding: 6px 9px;
+    }
+
+    .message-card {
+        padding: 22px;
+    }
+
+    .message-card h1 {
+        font-size: 27px;
+    }
+
+    .card {
+        padding: 22px;
+        border-radius: 14px;
+    }
+
+    .hero {
+        padding: 35px 15px;
+    }
+
+    .hero h1 {
+        font-size: 32px;
+    }
+
+    h1 {
+        font-size: 27px;
+    }
+
+    .score {
+        font-size: 48px;
+    }
+
+    .login-card {
+        margin: 25px auto;
+        padding: 22px;
+    }
+
+    .campaign-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .campaign-button {
+        margin-left: 0;
+        text-align: center;
+    }
+
+    .campaign-info {
+        width: 100%;
+    }
+
+    .campaign-info span {
+        margin-left: auto;
+    }
+
+    .primary-button,
+    .secondary-button {
+        width: 100%;
+        text-align: center;
+    }
+}

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SentiNet Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 { color: #1a1a2e; }
+    .subtitle { color: #555; margin-bottom: 20px; }
+
+    .cards {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 14px 18px;
+      flex: 1;
+      min-width: 140px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .card .label { font-size: 13px; color: #777; margin-bottom: 4px; }
+    .card .value { font-size: 24px; font-weight: bold; }
+    .card.danger .value { color: #d9363e; }
+    .card.warning .value { color: #d98c00; }
+
+    .chart-container {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    h2 { font-size: 18px; margin-bottom: 10px; }
+    ul { list-style: none; padding: 0; }
+    li {
+      background-color: white;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      border-left: 5px solid gray;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .alert-msg { font-size: 14px; font-weight: bold; }
+    .alert-reason { font-size: 13px; color: #555; margin-top: 2px; }
+    .alert-meta { font-size: 12px; color: #888; margin-top: 4px; }
+    .badge {
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      text-transform: capitalize;
+      white-space: nowrap;
+    }
+    .critical { border-left-color: #8b0000; }
+    .critical .badge { background: #f8d7da; color: #8b0000; }
+    .high { border-left-color: #d9363e; }
+    .high .badge { background: #fde2e1; color: #d9363e; }
+    .medium { border-left-color: #d98c00; }
+    .medium .badge { background: #fdf0d5; color: #d98c00; }
+    .low { border-left-color: gray; }
+    .low .badge { background: #eee; color: #666; }
+
+    .empty-state {
+      text-align: center;
+      color: #888;
+      padding: 30px;
+      background: white;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>SentiNet Security Dashboard</h1>
+  <p class="subtitle">Behavioral detection alerts from the SentiNet account-takeover simulation.</p>
+
+  <div class="cards" id="summaryCards"></div>
+
+  <div class="chart-container">
+    <canvas id="riskChart" height="90"></canvas>
+  </div>
+
+  <h2>Detected alerts</h2>
+  <ul id="alertList"></ul>
+
+  <script>
+    const alerts = [
+      {
+        rule_id: "ATO-003",
+        rule_name: "Full simulated account-takeover pattern",
+        risk_level: "CRITICAL",
+        score: 100,
+        user_id: "USER-001",
+        reason: "SIM re-registration was followed by a PIN reset and a successful virtual transfer within the configured time window.",
+        matched_events: ["SIM_REREGISTRATION", "pin.reset", "transaction.transfer"],
+        timestamp: "2026-09-30T09:14:00Z"
+      },
+      {
+        rule_id: "ATO-001",
+        rule_name: "SIM re-registration followed by PIN reset",
+        risk_level: "HIGH",
+        score: 75,
+        user_id: "USER-002",
+        reason: "A PIN reset occurred shortly after SIM re-registration.",
+        matched_events: ["SIM_REREGISTRATION", "pin.reset"],
+        timestamp: "2026-09-30T08:50:00Z"
+      },
+      {
+        rule_id: "ATO-002",
+        rule_name: "SIM re-registration followed by transfer",
+        risk_level: "HIGH",
+        score: 80,
+        user_id: "USER-003",
+        reason: "A virtual money transfer occurred shortly after SIM re-registration.",
+        matched_events: ["SIM_REREGISTRATION", "transaction.transfer"],
+        timestamp: "2026-09-30T07:40:00Z"
+      }
+    ];
+
+    function formatTime(isoString) {
+      const d = new Date(isoString);
+      return isNaN(d) ? isoString : d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    }
+
+    const riskOrder = { LOW: 1, MEDIUM: 2, HIGH: 3, CRITICAL: 4 };
+    const criticalCount = alerts.filter(a => a.risk_level === "CRITICAL").length;
+    const highCount = alerts.filter(a => a.risk_level === "HIGH").length;
+    const highestRisk = alerts.length
+      ? alerts.reduce((max, a) => (riskOrder[a.risk_level] > riskOrder[max] ? a.risk_level : max), "LOW")
+      : "LOW";
+
+    const summaryData = [
+      { label: "Total alerts", value: alerts.length, cls: "" },
+      { label: "Critical alerts", value: criticalCount, cls: "danger" },
+      { label: "High-risk alerts", value: highCount, cls: "warning" },
+      { label: "Highest risk level", value: highestRisk, cls: (highestRisk === "CRITICAL" || highestRisk === "HIGH") ? "danger" : "" }
+    ];
+    const cardsContainer = document.getElementById("summaryCards");
+    summaryData.forEach(function (item) {
+      const div = document.createElement("div");
+      div.className = "card " + item.cls;
+      div.innerHTML = '<div class="label">' + item.label + '</div><div class="value">' + item.value + '</div>';
+      cardsContainer.appendChild(div);
+    });
+
+    const list = document.getElementById("alertList");
+    if (alerts.length === 0) {
+      list.innerHTML = '<div class="empty-state">No alerts detected yet.</div>';
+    } else {
+      const sorted = [...alerts].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      sorted.forEach(function (alert) {
+        const li = document.createElement("li");
+        li.className = alert.risk_level.toLowerCase();
+        li.innerHTML =
+          '<div>' +
+            '<div class="alert-msg">' + alert.rule_name + '</div>' +
+            '<div class="alert-reason">' + alert.reason + '</div>' +
+            '<div class="alert-meta">User ' + alert.user_id + ' &middot; ' + formatTime(alert.timestamp) + ' &middot; score ' + alert.score + '</div>' +
+          '</div>' +
+          '<span class="badge">' + alert.risk_level + '</span>';
+        list.appendChild(li);
+      });
+    }
+
+    const counts = { LOW: 0, MEDIUM: 0, HIGH: 0, CRITICAL: 0 };
+    alerts.forEach(a => { counts[a.risk_level] = (counts[a.risk_level] || 0) + 1; });
+
+    const ctx = document.getElementById("riskChart");
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: ["Low", "Medium", "High", "Critical"],
+        datasets: [{
+          label: "Alerts",
+          data: [counts.LOW, counts.MEDIUM, counts.HIGH, counts.CRITICAL],
+          backgroundColor: ["#888888", "#d98c00", "#d9363e", "#8b0000"]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+      }
+    });
+  </script>
+
+</body>
+</html>

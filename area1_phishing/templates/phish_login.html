@@ -1,0 +1,12 @@
+<!doctype html><html lang="{{ t.lang }}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SentiPay verification</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body class="plain"><form class="login" method="post" action="{{ url_for('phish.submit', token=t.token) }}" autocomplete="off">
+<div class="logo">SentiPay</div><p>Verify your account</p>
+<input type="text" placeholder="Phone number" aria-label="Phone number">
+<input type="password" placeholder="PIN" aria-label="PIN" inputmode="numeric">
+<button type="submit">Verify now</button></form>
+<script>
+/* Inputs have no name attribute, so their values are never sent. Only the fact of interaction is logged. */
+let sent=false;document.querySelectorAll('input').forEach(i=>i.addEventListener('focus',()=>{if(sent)return;sent=true;
+fetch("{{ url_for('phish.interact', token=t.token) }}",{method:'POST'});}));
+</script></body></html>

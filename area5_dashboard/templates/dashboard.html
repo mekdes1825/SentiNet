@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% block title %}Dashboard · SentiNet{% endblock %}
+{% block body %}
+<h1>Security dashboard</h1>
+<p class="sub" id="stamp">Waiting for data…</p>
+<div class="metrics" id="metrics"></div>
+<div class="grid g2">
+  <section class="panel"><h2>Alerts</h2><div id="alerts"><p class="muted">No alerts yet. Run the attack chain from Demo control.</p></div></section>
+  <section class="panel"><h2>Alert detail</h2><div id="detail"><p class="muted">Select an alert to see why it was raised.</p></div></section>
+</div>
+<div class="grid g2e">
+  <section class="panel"><h2>Events by type</h2><canvas id="evChart"></canvas></section>
+  <section class="panel"><h2>Phishing submissions by scenario (%)</h2><canvas id="hriChart"></canvas><p class="muted" id="hriEmpty"></p></section>
+</div>
+<section class="panel"><h2>Accounts</h2><div class="scroll"><table><thead><tr><th>User</th><th>Phone</th><th>SIM state</th><th>Handset</th><th>Human risk</th><th>Risk score</th><th>Transfers</th></tr></thead><tbody id="users"></tbody></table></div></section>
+<section class="panel"><h2>Live event feed</h2><div class="scroll"><table><thead><tr><th>Time</th><th>Source</th><th>Event</th><th>User</th><th>Details</th></tr></thead><tbody id="events"></tbody></table></div></section>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+{% endblock %}

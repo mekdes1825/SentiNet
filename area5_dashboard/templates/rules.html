@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block title %}Rules · SentiNet{% endblock %}
+{% block body %}
+<h1>Detection rules</h1>
+<p class="sub">Rules are re-evaluated after every event. Changes apply to the next event.</p>
+<section class="panel"><table><thead><tr><th>Rule</th><th>What it checks</th><th>Window (s)</th><th>Points</th><th>On</th><th></th></tr></thead><tbody>
+{% for r in rules %}<tr><form method="post"><td><strong>{{ r.id }}</strong> {{ r.name }}<input type="hidden" name="id" value="{{ r.id }}"></td><td class="muted">{{ r.description }}</td>
+<td><input type="number" name="window_sec" value="{{ r.window_sec }}" style="width:90px"></td><td><input type="number" name="points" value="{{ r.points }}" style="width:70px"></td>
+<td><input type="checkbox" name="enabled" {{ 'checked' if r.enabled }}></td><td><button>Save</button></td></form></tr>{% endfor %}
+</tbody></table>
+<p class="muted">Levels: 25+ medium, 50+ high, 80+ critical. Scores add up and are capped at 100.</p></section>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}{% block title %}Phone · SentiNet{% endblock %}
+{% block body %}
+<h1>USSD phone</h1>
+<p class="sub">Dial <strong>*999#</strong> (fictional code). A number only answers on the handset it is registered to.</p>
+<div class="grid g2e">
+<div class="panel controls">
+  <label>Number to use<br><select id="num">{% for u in users %}<option value="{{ u.phone }}" data-home="{{ u.home_device }}">{{ u.name }} · {{ u.phone }}</option>{% endfor %}</select></label>
+  <label>Handset<br><select id="dev"><option value="owner">Owner's handset</option><option value="attacker">Attacker's handset</option></select></label>
+  <p class="muted">After a SIM re-registration, only the attacker's handset gets service for that number.</p>
+</div>
+<div class="phone"><div class="screen" id="screen">Press Dial.</div>
+<input id="inp" placeholder="Reply" autocomplete="off" aria-label="Reply">
+<div class="btns"><button class="primary" id="dial">Dial *999#</button><button id="send">Send</button><button id="end">End</button></div></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+const attacker = "{{ attacker }}"; let sid = null;
+const $ = id => document.getElementById(id);
+const device = () => $("dev").value === "attacker" ? attacker : $("num").selectedOptions[0].dataset.home;
+async function call(text) {
+  const r = await fetch("/ussd/api", {method: "POST", headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({phone: $("num").value, device_id: device(), session_id: sid, text})});
+  const j = await r.json(); sid = j.end ? null : j.session_id; $("screen").textContent = j.message; $("inp").value = ""; $("inp").focus();
+}
+$("dial").onclick = () => { sid = null; call(""); };
+$("send").onclick = () => { if (sid) call($("inp").value); };
+$("inp").onkeydown = e => { if (e.key === "Enter") $("send").click(); };
+$("end").onclick = () => { sid = null; $("screen").textContent = "Session closed."; };
+</script>
+{% endblock %}

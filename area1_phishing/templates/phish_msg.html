@@ -1,0 +1,4 @@
+<!doctype html><html lang="{{ t.lang }}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Messages</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body class="plain"><div class="sms"><div class="from">From: 0900 000 555</div>
+<div class="bubble">{{ before }}<a href="{{ url_for('phish.login', token=t.token) }}">{{ fake_url }}</a>{{ after }}</div></div></body></html>

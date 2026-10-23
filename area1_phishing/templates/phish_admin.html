@@ -1,0 +1,25 @@
+{% extends "base.html" %}{% block title %}Phishing · SentiNet{% endblock %}
+{% block body %}
+<h1>Phishing simulation</h1>
+<p class="sub">Controlled drills for fictional participants. Only behaviour is recorded: opened, clicked, form interaction, submission attempt. Typed values are never read.</p>
+{% if error %}<div class="err">{{ error }}</div>{% endif %}
+<div class="grid g2e">
+<form method="post" class="panel">
+  <h2>New drill</h2>
+  <label class="row">Name <input name="name" placeholder="October awareness drill"></label>
+  <label class="row">Scenario <select name="scenario">{% for k,s in scenarios.items() %}<option value="{{ k }}">{{ s.label }}</option>{% endfor %}</select></label>
+  <label class="row">Language <select name="lang"><option value="am">Amharic</option><option value="en">English</option></select></label>
+  <h2 style="margin-top:12px">Participants</h2>
+  {% for u in users %}<label class="row"><input type="checkbox" name="users" value="{{ u.id }}"> {{ u.name }}</label>{% endfor %}
+  <label class="row" style="margin-top:10px"><input type="checkbox" name="consent"> Every participant has agreed to take part in this exercise</label>
+  <div class="actions"><button class="primary">Create drill</button></div>
+</form>
+<div>
+{% for r in results %}
+<section class="panel"><h2>{{ r.c.name }} <span class="muted">· {{ r.label }} · {{ 'Amharic' if r.c.lang == 'am' else 'English' }}</span></h2>
+<div class="scroll"><table><thead><tr><th>Participant</th><th>Opened</th><th>Clicked</th><th>Typed</th><th>Submitted</th><th>HRI</th><th>Link</th></tr></thead><tbody>
+{% for p in r.rows %}<tr><td>{{ p.name }}</td><td>{{ '✓' if p.opened else '–' }}</td><td>{{ '✓' if p.clicked else '–' }}</td><td>{{ '✓' if p.focus else '–' }}</td><td>{{ '✓' if p.submitted else '–' }}</td><td>{{ p.hri }}</td><td><a href="/p/{{ p.token }}" target="_blank">Open message</a></td></tr>{% endfor %}
+</tbody></table></div></section>
+{% else %}<section class="panel"><p class="muted">No drills yet. Create one, then open a participant's message link to try the flow.</p></section>{% endfor %}
+</div></div>
+{% endblock %}

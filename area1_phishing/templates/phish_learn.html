@@ -1,0 +1,6 @@
+<!doctype html><html lang="{{ lang }}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Security exercise</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body class="plain"><div class="learn">
+{% if lang == 'am' %}<h1>ይህ የደህንነት ልምምድ ነበር</h1><p>ምንም መረጃ አልተቀመጠም። ከዚህ መልዕክት ውስጥ ማስተዋል የነበረባቸው ምልክቶች፦</p>
+{% else %}<h1>This was a security exercise</h1><p>Nothing you typed was saved. These are the warning signs in the message you just saw:</p>{% endif %}
+<ul>{% for f in flags %}<li>{{ f }}</li>{% endfor %}</ul><p><strong>{{ action }}</strong></p></div></body></html>

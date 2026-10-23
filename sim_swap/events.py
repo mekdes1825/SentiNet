@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 @dataclass
@@ -20,7 +20,7 @@ class SIMSwapEvent:
         old_state: str,
         new_state: str,
         scenario: str,
-    ):
+    ) -> "SIMSwapEvent":
         return cls(
             event_type="SIM_REREGISTRATION",
             user_id=user_id,
@@ -28,10 +28,10 @@ class SIMSwapEvent:
             old_state=old_state,
             new_state=new_state,
             scenario=scenario,
-            timestamp=datetime.now().isoformat(),
+            timestamp=datetime.now(timezone.utc).isoformat(),
         )
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {
             "event_type": self.event_type,
             "user_id": self.user_id,

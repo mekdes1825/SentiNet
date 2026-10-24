@@ -1,18 +1,23 @@
-# Member 3 — USSD, Virtual Wallet, and PIN Reset
+# Member 6 — App Integration, Demo, and Setup
 
 ## Files in this package
-- `ussd.py`
-- `templates/phone.html`
+- `app.py`
+- `demo.py`
+- `templates/demo.html`
+- `db.py`
+- `README.md`
+- `requirements.txt`
+- `.gitignore`
 
 ## Purpose
-Carefully trace the full USSD menu, virtual wallet, PIN reset, verification, and transfer flow. The PIN-reset logic is the highest-priority review area.
+Review app startup, blueprint registration, database initialization, demo scenario, and setup instructions. Coordinate with the project owner before changing shared interfaces.
 
 ## Review checklist
-- [ ] Document the exact current PIN-reset steps before proposing changes.
-- [ ] Test both successful and failed reset/verification paths.
-- [ ] Test wrong-PIN handling and transfer success/blocking paths.
-- [ ] Confirm all money and accounts are simulated; do not connect to real services.
-- [ ] Record discrepancies as a short issue list instead of silently changing shared event names.
+- [ ] Setup instructions match the current app.
+- [ ] All blueprints register and app starts with the documented command.
+- [ ] Demo scenario works from a clean database.
+- [ ] Database schema/helpers stay compatible with all modules.
+- [ ] No secrets, real credentials, or real financial data are included.
 
 ## Git workflow
 1. Start from the latest shared repository baseline in your own feature branch.

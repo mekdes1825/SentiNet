@@ -1,65 +1,63 @@
-# SentiNet — Area 1: Phishing Simulation & Human Risk
+# SentiNet
 
-## Overview
+Mobile-money fraud simulation and real-time behavioural detection. Fictional users, virtual money, no real telecom or banking. One Flask app, one SQLite file.
 
-Area 1 focuses on simulating phishing attacks in a controlled environment to demonstrate how human behavior can contribute to cybersecurity risks.
+## Run it
 
-The module provides simulated phishing messages, a mock login interaction, and an educational page to help users recognize phishing attempts. It is designed to integrate with SentiNet's shared event logging and detection components.
+    pip install -r requirements.txt
+    python app.py            # http://127.0.0.1:5000
 
-**Important:** This is a security-awareness simulation. It must not collect or store real user passwords or use real banking credentials.
+Chart.js loads from a CDN. For an offline demo, download `chart.umd.min.js` into `static/` and change the `<script>` tag in `templates/dashboard.html`.
 
-## Features
+Hardened mode (weaknesses switched off, for a before/after demo): set `SENTINET_HARDENED=1` before `python app.py`.
 
-- **Phishing campaign interface:** Provides an interface for managing or initiating phishing simulations.
-- **Simulated phishing message:** Presents a mock phishing message for the target user.
-- **Mock login page:** Demonstrates a phishing-style login interaction without requiring real account credentials.
-- **Learning page:** Helps users understand phishing risks and identify suspicious messages.
-- **Event logging:** Integrates with SentiNet's shared event-logging module.
-- **Human risk integration:** Imports the shared human-risk functionality to support risk assessment.
+## Files and the work area each one covers
 
-## Project Structure
+| File | Work area |
+|---|---|
+| `phishing.py`, `templates/phish_*.html` | 1. Phishing and human risk |
+| `sim.py`, `templates/sim.html` | 2. SIM-swap |
+| `ussd.py`, `templates/phone.html` | 3. USSD and mobile money |
+| `detection.py`, `events.py` | 4. Detection engine, shared event log |
+| `dashboard.py`, `templates/dashboard.html`, `static/dashboard.js`, `templates/rules.html` | 5. Dashboard |
+| `db.py`, `demo.py`, `templates/demo.html`, `app.py` | 6. Integration, scenarios, testing |
 
-```text
-area1_phishing/
-├── phishing.py
-└── templates/
-    ├── phish_admin.html
-    ├── phish_msg.html
-    ├── phish_login.html
-    └── phish_learn.html
-```
+## The shared event format (table `events`)
 
-## Dependencies and Integration
+`ts` (epoch seconds), `source` (phishing, sim, ussd, response, detector), `event_type`, `user_id`, `phone`, `session_id`, `device_id`, `details` (JSON). Every component writes through `events.log_event()`. A JSON-lines copy goes to `logs/events.jsonl`.
 
-The module imports shared components from the main SentiNet application:
+## Event names
 
-- `db.py` — database queries and execution.
-- `detection.py` — human-risk and detection functionality.
-- `events.py` — security-event logging.
+phishing: message_opened, link_clicked, form_interaction, credential_submission_attempt, teachable_moment_viewed
+sim: sim_reregistration, sim_restored
+ussd: session_created (details.new_device), device_rejected, auth_success, pin_failed, balance_checked, pin_reset_requested, pin_reset_completed, reset_verification_failed, pin_changed, transfer_initiated, transfer_completed, transfer_blocked
+response: transfers_restricted, transfers_released
+detector: alert_raised, alert_escalated
 
-The shared application must provide the expected database tables, fields, and functions before the module can operate correctly.
+## Detection rules (editable on the Rules page)
 
-The module also uses Flask functionality for routing, templates, requests, and redirects.
+| Rule | Fires when | Points |
+|---|---|---|
+| R1 | PIN reset requested within 120 s of a SIM re-registration | 50 |
+| R2 | 3 or more wrong PINs within 300 s | 25 |
+| R3 | Session from an unfamiliar handset, then PIN reset, PIN change or transfer within 300 s | 20 |
+| R4 | 2 or more account changes within 600 s of a SIM re-registration | 20 |
+| R5 | Transfer within 600 s of a PIN reset | 30 |
+| R6 | Another rule fired and the user's Human Risk Index is 60 or higher | 5 |
 
-## Setup
+Levels: 25+ MEDIUM, 50+ HIGH, 80+ CRITICAL. Scores add up, capped at 100. Rules are re-run after every event, so the alert appears at the PIN reset (HIGH) and escalates at the transfer (CRITICAL).
 
-1. Clone the SentiNet repository.
-2. Open the repository in your terminal or IDE.
-3. Create and activate a Python virtual environment.
-4. Install the project's required Python packages.
-5. Ensure the shared database, detection, and event-logging components are configured.
-6. Register the `phish` Blueprint with the main Flask application.
-7. Configure the required database tables and campaign data before testing the simulation.
+## Human Risk Index
 
-**Current implementation status:** The Area 1 source files have been added to the feature branch. The module's compatibility with the shared application must be verified before it can be considered runnable. This folder does not currently include the standalone `app.py` and `database.py` files from the previous implementation.
+Per participant, each behaviour counts once: message opened 10, link clicked 30, form interaction 20, submission attempt 40 (max 100). The dashboard shows the average across participants.
 
-## Safety Notes
+## Controlled weaknesses (lab only)
 
-- Use only authorized test users and controlled simulations.
-- Never request or store real passwords.
-- Do not send simulated phishing messages to people without appropriate authorization.
-- Keep simulation events limited to the information needed for security-awareness testing.
+1. PIN reset trusts the phone number alone (no second check).
+2. Sessions never expire and are not tied to a handset.
+3. No lockout after wrong PINs.
+4. PINs hashed with unsalted MD5.
 
-## Development Status
+## Safety
 
-Area 1 contains the replacement phishing-simulation implementation and its HTML templates. Integration testing is still required to verify its routes, database operations, event logging, and human-risk calculations within the complete SentiNet application.
+Fictional data only. Phishing form inputs have no `name` attribute and the submit route never reads the request body, so typed values cannot be stored. Drills require a consent tick-box. Fictional brand "SentiPay" and a fictional dial code.

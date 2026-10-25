@@ -1,11 +1,63 @@
 # SentiNet
 
-Mobile-money fraud simulation and real-time behavioural detection. Fictional users, virtual money, no real telecom or banking. One Flask app, one SQLite file.
+Mobile-money fraud simulation and real-time behavioural detection, built for the Ethiopian context. Fictional users, virtual money, no real telecom or banking. One Flask app, one SQLite file.
+
+## Submission Overview
+
+| Item | Link / Details |
+|------|----------------|
+| Video Presentation (5 min) | [Watch on Google Drive](https://drive.google.com/file/d/1eVOUF2Tek5ZqS1vrh1PuELL9YSnkuGnd/view?usp=sharing) |
+| Project Information | [About the Project](#about-the-project) |
+| Team Information | [Team Members](#team-members) |
+
+## Video Presentation
+
+📹 [Watch the 5-minute video presentation](https://drive.google.com/file/d/1eVOUF2Tek5ZqS1vrh1PuELL9YSnkuGnd/view?usp=sharing)
+
+The video demonstrates the project, its key features, and how it works.
+
+---
+
+## About the Project
+
+### Purpose
+
+Mobile money is widely used in Ethiopia, and fraud such as SIM-swap and USSD account takeover puts users' funds at risk. SentiNet is a safe, simulated environment that reproduces these attacks and pairs them with a real-time behavioural detection engine and dashboard. It lets the attack patterns, and the signals that expose them, be studied and demonstrated without touching any real account.
+
+### Main Features
+
+- **Phishing and human-risk simulation:** fake phishing messages and pages that measure how participants behave, producing a per-participant Human Risk Index.
+- **SIM-swap and USSD mobile-money environment:** a simulated USSD phone with login, balance checks, PIN reset and change, and transfers between fictional accounts, plus a SIM re-registration scenario.
+- **Detection engine:** six editable rules (R1 to R6) that run after every event and raise MEDIUM, HIGH or CRITICAL alerts. The alert appears at the PIN reset and escalates at the transfer.
+- **Live dashboard:** real-time alerts, event log, rules page and Chart.js charts.
+- **Before/after demo:** hardened mode switches the lab weaknesses off so the same attack can be compared with and without them.
+- **Safety by design:** fictional data only, no captured input, consent tick-box for drills.
+
+### Tech Stack
+
+Python, Flask, SQLite, HTML/CSS/JavaScript, Chart.js, Python `hashlib` and `logging`.
+
+---
+
+## Team Members
+
+| # | Full Name | CTC ID |
+|---|-----------|--------|
+| 1 | Mekdes Begashaw | CTC-2327-26 |
+| 2 | Hikma Mohamed | CTC-816-26 |
+| 3 | Samuel Bekele | CTC-3392-26 |
+| 4 | Binyam Amene | CTC-1764-26 |
+| 5 | Naol Mesfin | CTC-4264-26 |
+| 6 | Mussie Gebreslassie | CTC-2101-26 |
+
+---
 
 ## Run it
 
-    pip install -r requirements.txt
-    python app.py            # http://127.0.0.1:5000
+```bash
+pip install -r requirements.txt
+python app.py            # http://127.0.0.1:5000
+```
 
 Chart.js loads from a CDN. For an offline demo, download `chart.umd.min.js` into `area5_dashboard/static/` and change the `<script>` tag in `area5_dashboard/templates/dashboard.html`.
 
@@ -57,11 +109,11 @@ The default PINs are for the lab only. They are stored hashed (see weakness 4 be
 
 ## Event names
 
-phishing: message_opened, link_clicked, form_interaction, credential_submission_attempt, teachable_moment_viewed
-sim: sim_reregistration, sim_restored
-ussd: session_created (details.new_device), device_rejected, auth_success, pin_failed, balance_checked, pin_reset_requested, pin_reset_completed, reset_verification_failed, pin_changed, transfer_initiated, transfer_completed, transfer_blocked
-response: transfers_restricted, transfers_released
-detector: alert_raised, alert_escalated
+- **phishing:** message_opened, link_clicked, form_interaction, credential_submission_attempt, teachable_moment_viewed
+- **sim:** sim_reregistration, sim_restored
+- **ussd:** session_created (details.new_device), device_rejected, auth_success, pin_failed, balance_checked, pin_reset_requested, pin_reset_completed, reset_verification_failed, pin_changed, transfer_initiated, transfer_completed, transfer_blocked
+- **response:** transfers_restricted, transfers_released
+- **detector:** alert_raised, alert_escalated
 
 ## Detection rules (editable on the Rules page)
 

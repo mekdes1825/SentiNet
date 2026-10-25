@@ -9,6 +9,12 @@ PAUSE = 1.5
 _lock = threading.Lock()
 PINS = {i: s[2] for i, s in enumerate(SEED_USERS, start=1)}
 
+# Who the scripted drill clicks for, and how far each goes (0-4):
+# 1 = opened message, 2 = login page, 3 = form interaction, 4 = submitted + learn page.
+# Empty = the drill only creates the campaign and logs no fake phishing behaviour.
+# Old demo values: {1: 4, 2: 1, 3: 2, 4: 3, 5: 0, 6: 1}
+DRILL_DEPTH = {}
+
 
 def user(i):
     return query("SELECT * FROM users WHERE id=?", (i,), one=True)
@@ -28,8 +34,7 @@ def call(c, i, device, steps):
 
 def drill(c):
     _, tokens = create_campaign("Awareness drill", "verification", "am", [1, 2, 3, 4, 5, 6])
-    depth = {1: 4, 2: 1, 3: 2, 4: 3, 5: 0, 6: 1}          # how far each participant went
-    for uid, d in depth.items():
+    for uid, d in DRILL_DEPTH.items():
         t = tokens[uid]
         if d >= 1: c.get(f"/p/{t}")
         if d >= 2: c.get(f"/p/{t}/login")

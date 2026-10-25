@@ -7,7 +7,9 @@ Mobile-money fraud simulation and real-time behavioural detection. Fictional use
     pip install -r requirements.txt
     python app.py            # http://127.0.0.1:5000
 
-Chart.js loads from a CDN. For an offline demo, download `chart.umd.min.js` into `static/` and change the `<script>` tag in `templates/dashboard.html`.
+Chart.js loads from a CDN. For an offline demo, download `chart.umd.min.js` into `area5_dashboard/static/` and change the `<script>` tag in `area5_dashboard/templates/dashboard.html`.
+
+`app.py` adds the area folders to the Python path and registers their template and static folders, so modules can import each other by name (`from db import ...`, `from events import log_event`). Keep `area4_detection/events.py` as the only module named `events` on that path. `sim_swap/events.py` is a separate SIM-swap event helper and is not imported by the app.
 
 Hardened mode (weaknesses switched off, for a before/after demo): set `SENTINET_HARDENED=1` before `python app.py`.
 
@@ -15,12 +17,12 @@ Hardened mode (weaknesses switched off, for a before/after demo): set `SENTINET_
 
 | File | Work area |
 |---|---|
-| `phishing.py`, `templates/phish_*.html` | 1. Phishing and human risk |
-| `sim.py`, `templates/sim.html` | 2. SIM-swap |
+| `area1_phishing/phishing.py`, `area1_phishing/templates/phish_*.html` | 1. Phishing and human risk |
+| `sim_swap/sim.py`, `templates/sim.html` | 2. SIM-swap |
 | `ussd.py`, `templates/phone.html` | 3. USSD and mobile money |
-| `detection.py`, `events.py` | 4. Detection engine, shared event log |
-| `dashboard.py`, `templates/dashboard.html`, `static/dashboard.js`, `templates/rules.html` | 5. Dashboard |
-| `db.py`, `demo.py`, `templates/demo.html`, `app.py` | 6. Integration, scenarios, testing |
+| `area4_detection/detection.py`, `area4_detection/events.py` | 4. Detection engine, shared event log |
+| `area5_dashboard/dashboard.py`, `area5_dashboard/templates/dashboard.html`, `area5_dashboard/templates/rules.html`, `area5_dashboard/static/dashboard.js` | 5. Dashboard |
+| `db.py`, `demo.py`, `templates/demo.html`, `templates/base.html`, `app.py` | 6. Integration, scenarios, testing |
 
 ## The shared event format (table `events`)
 

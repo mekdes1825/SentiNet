@@ -98,9 +98,34 @@ def execute(sql, args=()):
         c.close()
 
 
+def _add_missing_columns(c):
+    """Upgrade a database created by an older schema, keeping all rows.
+    CREATE TABLE IF NOT EXISTS never adds columns, so an old table would make the
+    CREATE INDEX lines in SCHEMA fail (e.g. 'no such column: ts')."""
+    ref = sqlite3.connect(":memory:")
+    try:
+        ref.executescript(SCHEMA)
+        for (table,) in ref.execute("SELECT name FROM sqlite_master "
+                                    "WHERE type='table' AND name NOT LIKE 'sqlite_%'").fetchall():
+            have = {r[1] for r in c.execute(f"PRAGMA table_info({table})")}
+            if not have:          # table not in the database yet; SCHEMA creates it
+                continue
+            for _cid, name, ctype, _nn, dflt, pk in ref.execute(f"PRAGMA table_info({table})").fetchall():
+                if name in have or pk:
+                    continue
+                sql = f"ALTER TABLE {table} ADD COLUMN {name} {ctype or ''}"
+                if dflt is not None:
+                    sql += f" DEFAULT {dflt}"
+                c.execute(sql)
+        c.commit()
+    finally:
+        ref.close()
+
+
 def init_db():
     c = conn()
     try:
+        _add_missing_columns(c)
         c.executescript(SCHEMA)
         if c.execute("SELECT COUNT(*) FROM users").fetchone()[0] == 0:
             for i, (name, phone, pin, bal, secret) in enumerate(SEED_USERS, start=1):

@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}SentiNet{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body>
+<header class="top"><a class="brand" href="/dashboard">SentiNet</a>
+<nav>{% for href,label in [('/dashboard','Dashboard'),('/admin/phishing','Phishing'),('/sim','SIM console'),('/phone','Phone'),('/demo','Demo control'),('/rules','Rules')] %}
+<a href="{{ href }}" class="{{ 'on' if request.path == href else '' }}">{{ label }}</a>{% endfor %}</nav></header>
+<main>{% block body %}{% endblock %}</main>
+{% block scripts %}{% endblock %}
+</body></html>

@@ -13,6 +13,33 @@ Chart.js loads from a CDN. For an offline demo, download `chart.umd.min.js` into
 
 Hardened mode (weaknesses switched off, for a before/after demo): set `SENTINET_HARDENED=1` before `python app.py`.
 
+## Test accounts and default PINs (simulation only)
+
+These fictional accounts are seeded by `db.py` (`EED_USERS`). No real people, numbers or PINs are involved. Use them to log in to the USSD simulator for a normal drill.
+
+| Participant | Phone (simulated) | Default PIN | Starting balance | Birth year |
+|---|---|---|---|---|
+| Abebe Kebede | 0900000001 | 1234 | 25,000 ETB | 1990 |
+| Tigist Alemu | 0900000002 | 4321 | 18,000 ETB | 1988 |
+| Dawit Tesfaye | 0900000003 | 1111 | 12,000 ETB | 1995 |
+| Hana Mulugeta | 0900000004 | 2222 | 30,000 ETB | 1992 |
+| Samuel Bekele | 0900000005 | 3333 | 9,000 ETB | 1985 |
+| Marta Girma | 0900000006 | 4444 | 15,000 ETB | 1998 |
+| Unknown Recipient | 0900000099 | 0000 | 100 ETB | 1980 |
+
+`Unknown Recipient` is a passive transfer target for the suspicious-transfer scenario. It is not a participant, so do not log in with it during a normal drill.
+
+### Running a normal drill
+
+1. Start the server: `python app.py`
+2. Open the USSD simulator (`templates/phone.html`) and log in as a participant with their phone number and default PIN.
+3. Do normal activity: check the balance, send money to other participants.
+4. Open the dashboard and confirm no alerts fire. This gives the detector a clean baseline before you run the SIM-swap and takeover scenario.
+
+To change a PIN or balance, edit `EED_USERS` in `db.py` and re-seed the database.
+
+The default PINs are for the lab only. They are stored hashed (see weakness 4 below), so this table is the only place they appear in plain text.
+
 ## Files and the work area each one covers
 
 | File | Work area |

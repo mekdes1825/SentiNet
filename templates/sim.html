@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% block title %}SIM console · SentiNet{% endblock %}
+{% block body %}
+<h1>SIM console</h1>
+<p class="sub">Simulated SIM re-registration. It changes which handset the fictional number answers to; no real telecom is involved.</p>
+{% if error %}<div class="err">{{ error }}</div>{% endif %}
+<section class="panel"><h2>Add account</h2>
+<form method="post" action="/sim/add" class="actions" style="margin:0">
+<input name="name" placeholder="Name" aria-label="Name" required>
+<input name="phone" placeholder="Number, e.g. 0900000123" aria-label="Phone number" required>
+<input name="pin" placeholder="4-digit PIN" aria-label="PIN" maxlength="4" style="width:120px" required>
+<input name="balance" type="number" min="0" value="10000" aria-label="Starting balance" style="width:120px">
+<button class="primary">Add account</button></form>
+<p class="muted">Use made-up numbers only, never a real person's number. New accounts appear on the Phone page and in the phishing participant list.</p></section>
+<section class="panel"><table><thead><tr><th>User</th><th>Number</th><th>SIM state</th><th>Registered handset</th><th></th></tr></thead><tbody>
+{% for u in users %}<tr><td>{{ u.name }}</td><td>{{ u.phone }}</td>
+<td><span class="chip {{ 'warn' if u.sim_state == 'attacker' else 'ok' }}">{{ 'attacker-controlled' if u.sim_state == 'attacker' else 'victim-controlled' }}</span></td>
+<td class="muted">{{ u.device_id }}</td>
+<td>{% if u.sim_state == 'victim' %}<form method="post" action="/sim/{{ u.id }}/swap"><button>Re-register SIM</button></form>
+{% else %}<form method="post" action="/sim/{{ u.id }}/restore"><button>Restore owner</button></form>{% endif %}</td></tr>{% endfor %}
+</tbody></table></section>
+{% endblock %}

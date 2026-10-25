@@ -13,6 +13,7 @@ MENU = ("SentiNet Mobile Money\n1. Check Balance\n2. Transfer Money\n3. Change P
         "4. Reset PIN\n5. Account Information\n0. Exit")
 IDLE_LIMIT = 120
 NEW_PIN = "Enter new 4-digit PIN:"
+RESTRICTED_MSG = "Transfers are temporarily restricted on this account. Contact support."
 
 
 def _user(phone):
@@ -69,7 +70,11 @@ def process(phone, device_id, sid, text):
 
     if st == "menu":
         if t == "1": return go("bal_pin", "Enter PIN:")
-        if t == "2": return go("tr_to", "Enter recipient number:")
+        if t == "2":
+            if _user(phone)["restricted"]:                 # block early, before any input
+                log_event("ussd", "transfer_blocked", amount=0, **ctx)
+                return end(RESTRICTED_MSG)
+            return go("tr_to", "Enter recipient number:")
         if t == "3": return go("chg_old", "Enter current PIN:")
         if t == "4":
             log_event("ussd", "pin_reset_requested", **ctx)
@@ -111,11 +116,14 @@ def process(phone, device_id, sid, text):
         amt, to_id = data["amount"], data["to"]
         log_event("ussd", "transfer_initiated", amount=amt, to_user=to_id, **ctx)
         fresh = _user(phone)
+        # DEBUG: remove once the restriction problem is solved
+        print("DEBUG transfer check -> user", fresh["id"], "restricted =", fresh["restricted"],
+              flush=True)
         if fresh["restricted"]:
             execute("INSERT INTO transactions(ts,from_user,to_user,amount,status) VALUES(?,?,?,?,?)",
                     (time.time(), u["id"], to_id, amt, "blocked"))
             log_event("ussd", "transfer_blocked", amount=amt, **ctx)
-            return end("Transfers are temporarily restricted on this account. Contact support.")
+            return end(RESTRICTED_MSG)
         execute("UPDATE users SET balance=balance-? WHERE id=?", (amt, u["id"]))
         execute("UPDATE users SET balance=balance+? WHERE id=?", (amt, to_id))
         execute("INSERT INTO transactions(ts,from_user,to_user,amount,status) VALUES(?,?,?,?,?)",
